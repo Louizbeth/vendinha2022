@@ -140,7 +140,7 @@ public class GerenciadorLoja {
 
         try{
             //criando uma conexão
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/app","root",""); 
+            Connection con = DriverManager.getConnection("jdbc:mysql://wagnerweinert.com.br:3306/app","tads21_ana","TADS311066"); 
             //wagnerweinert.com.br:3306/tads21_SEUNOME
 
             //preparando o comando sql
