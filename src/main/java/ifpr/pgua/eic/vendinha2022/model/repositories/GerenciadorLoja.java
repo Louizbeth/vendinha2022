@@ -19,6 +19,7 @@ import java.util.Optional;
 import com.google.gson.Gson;
 import com.mysql.cj.xdevapi.PreparableStatement;
 
+import ifpr.pgua.eic.vendinha2022.model.FabricaConexoes;
 import ifpr.pgua.eic.vendinha2022.model.entities.Cliente;
 import ifpr.pgua.eic.vendinha2022.model.entities.Produto;
 import ifpr.pgua.eic.vendinha2022.model.entities.Venda;
@@ -34,10 +35,14 @@ public class GerenciadorLoja {
     private List<Venda> vendas;
     private Venda venda;
 
+    private FabricaConexoes fabricaConexoes;
+
     public GerenciadorLoja(){
         clientes = new ArrayList<>();
         produtos = new ArrayList<>();
         vendas = new ArrayList<>();
+
+        this.fabricaConexoes = fabricaConexoes;
     }
 
     public void geraFakes(){
@@ -60,11 +65,14 @@ public class GerenciadorLoja {
 
         try{
             //criando uma conexão
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/app","root",""); 
+            //Connection con = DriverManager.getConnection("jdbc:mysql://wagnerweinert.com.br:3306/app","",""); 
             //wagnerweinert.com.br:3306/tads21_SEUNOME
 
+            //singleton uma unica instancia ; limita os testes
+            Connection con = FabricaConexoes.getInstance().getConnection();
+
             //preparando o comando sql
-            PreparedStatement pstm = con.prepareStatement("INSERT INTO clientes(nome,cpf,email,telefone) VALUES (?,?,?,?)");
+            PreparedStatement pstm = con.prepareStatement("INSERT INTO OOII_clientes(nome,cpf,email,telefone) VALUES (?,?,?,?)");
             
             //ajustando os parâmetros do comando
             pstm.setString(1, nome);
@@ -105,9 +113,9 @@ public class GerenciadorLoja {
         clientes.clear();
         try{
             //criando uma conexão
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/app","root",""); 
-            
-            PreparedStatement pstm = con.prepareStatement("SELECT * FROM clientes");
+            Connection con = fabricaConexoes.getConnection(); 
+             
+            PreparedStatement pstm = con.prepareStatement("SELECT * FROM OOII_clientes");
 
             ResultSet rs = pstm.executeQuery();
             
@@ -140,7 +148,7 @@ public class GerenciadorLoja {
 
         try{
             //criando uma conexão
-            Connection con = DriverManager.getConnection("jdbc:mysql://wagnerweinert.com.br:3306/app","tads21_ana","TADS311066"); 
+            Connection con = fabricaConexoes.getConnection(); 
             //wagnerweinert.com.br:3306/tads21_SEUNOME
 
             //preparando o comando sql
@@ -174,7 +182,7 @@ public class GerenciadorLoja {
         produtos.clear();
         try{
             //criando uma conexão
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/app","root",""); 
+            Connection con = fabricaConexoes.getConnection(); 
             
             PreparedStatement pstm = con.prepareStatement("SELECT * FROM produtos");
 

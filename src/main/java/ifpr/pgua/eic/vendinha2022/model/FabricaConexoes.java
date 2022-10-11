@@ -8,7 +8,7 @@ public class FabricaConexoes {
     private static int MAX_CONEXOES = 5;
 
     private static FabricaConexoes instance;
-    
+     
     private Connection[] conexoes;
     
     private FabricaConexoes(){
@@ -23,11 +23,20 @@ public class FabricaConexoes {
     }
 
     public Connection getConnection() throws SQLException{
-        for(int i = 0; i < conexoes.length; i++){
-            conexoes[i] = DriverManager.getConnection("jdbc:mysql://jdbc:mysql://wagnerweinert.com.br:3306/app", "root", "");
-            return conexoes[i];
-        }
 
+        String user = Env.get("DB_USER");
+        String password = Env.get("DB_PASSWORD");
+        String url = Env.get("DB_URL");
+
+
+        for(int i=0;i<conexoes.length;i++){
+            if(conexoes[i]==null || conexoes[i].isClosed()){
+                conexoes[i] = DriverManager.getConnection(url, 
+                                                          user, 
+                                                          password);
+                return conexoes[i];
+            }
+        }
         throw new SQLException("Não há conexões disponíveis! Esqueceu de fechar?");
     }
 }
